@@ -26,8 +26,10 @@ public:
 
 	Bullet shoot() {
 		Bullet bullet(1);
-		float angle = getRotation();
-		bullet.setPosition(getPosition().x + sin(angle * PI / 180) * 50.f, getPosition().y + -cos(angle * PI / 180) * 50.f);
+		float angle = getRotation() - 6;
+		//bullet.setPosition(getPosition());
+		bullet.setPosition(getPosition().x + sin(angle * PI / 180) * 44.f, getPosition().y + -cos(angle * PI / 180) * 44.f);
+		bullet.setRotation(getRotation());
 		return bullet;
 	}
 };

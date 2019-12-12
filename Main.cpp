@@ -23,7 +23,8 @@ int main() {
 	sf::Clock clock;
 
 	Player player(3);
-	list<sf::CircleShape> bullets;
+	list<Bullet> bullets;
+	bool isPressed = false;
 
 	clock.restart();
 	while (window.isOpen()) {
@@ -51,16 +52,34 @@ int main() {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 			player.rotate(speed * .8f * deltaT.asSeconds());
 		}
+	
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-			bullets.push_front(player.shoot());
+			if (bullets.size() < 5 && !isPressed) {
+				bullets.push_front(player.shoot());
+			}
+			isPressed = true;
 		}
-		//fpsCount.setString("Rotation:" + to_string(angle));
+		else {
+			isPressed = false;
+		}
 		window.clear(sf::Color::Black);
 		window.draw(fpsCount);
 		window.draw(player);
-		list<sf::CircleShape>::iterator it;
-		for (it = bullets.begin(); it != bullets.end(); ++it) {
-			window.draw(*it);
+		list<Bullet>::iterator bullet;
+		for (bullet = bullets.begin(); bullet != bullets.end(); ++bullet) {
+			float angle = (*bullet).getRotation();
+			(*bullet).move(sin(angle * PI / 180) * 1.f * speed * deltaT.asSeconds(), -cos(angle * PI / 180) * 1.f * speed * deltaT.asSeconds());
+			if ((*bullet).getPosition().x > 810 || (*bullet).getPosition().y > 810 || (*bullet).getPosition().x < -10 || (*bullet).getPosition().y < -10) {
+ 				(*bullet).damage();
+			}
+			window.draw(*bullet);
+			if ((*bullet).isDead()) {
+				//bullet = bullets.erase(bullet);
+				//bullets.erase(bullet);
+//				bullet--;
+				//bullets.remove(*bullet);
+				cout << "dead";
+			}
 		}
 		window.display();
 	}
