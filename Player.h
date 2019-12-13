@@ -22,14 +22,28 @@ public:
 	void move(float speed) {
 		float angle = getRotation();
 		sf::ConvexShape::move(sin(angle * PI / 180) * 1.f * speed , -cos(angle * PI / 180) * 1.f * speed);
+		int xPos =getPosition().x;
+		int yPos = getPosition().y;
+		if (xPos > 815) {
+			setPosition(0, yPos);
+		}
+		if (xPos < -15) {
+			setPosition(800, yPos);
+		}
+		if (yPos > 815) {
+			setPosition(xPos, 0);
+		}
+		if (yPos < -15) {
+			setPosition(xPos, 800);
+		}
 	}
 
-	Bullet shoot() {
-		Bullet bullet(1);
+	Bullet* shoot() {
+		Bullet* bullet = new Bullet(.25, sf::Color::Red);
 		float angle = getRotation() - 6;
 		//bullet.setPosition(getPosition());
-		bullet.setPosition(getPosition().x + sin(angle * PI / 180) * 44.f, getPosition().y + -cos(angle * PI / 180) * 44.f);
-		bullet.setRotation(getRotation());
+		bullet->setPosition(getPosition().x + sin(angle * PI / 180) * 44.f, getPosition().y + -cos(angle * PI / 180) * 44.f);
+		bullet->setRotation(getRotation());
 		return bullet;
 	}
 };

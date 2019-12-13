@@ -11,13 +11,17 @@ public:
 		Damageable::maxHealth = maxHealth;
 		health = maxHealth;
 	}
+	Damageable() {
+		maxHealth = 1;
+		health = maxHealth;
+	}
 	int getHealth() {
 		return health;
 	}
 	void damage() {
 		health -= 1;
 	}
-	bool isDead() {
+	bool isDestroyed() {
 		return health <= 0;
 	}
 };
