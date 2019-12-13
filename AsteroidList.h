@@ -1,3 +1,11 @@
+/*****************************************************
+FileName: AsteroidList.h
+Description: A custom data structure for manipulating the asteroids.
+Author: Kyle Reddeman
+Date Created 12/7/19
+Class: CptS 122
+******************************************************/
+
 #include <sfml/Graphics.hpp>
 #include "Bullet.h"
 class AsteroidList {
@@ -9,12 +17,14 @@ private:
 		Node* prev;
 	};
 	Node* top;
+	int size;
 public:
+	//sets the reference to window, and sets size to 0.
 	AsteroidList(sf::RenderWindow& w) : window(w) {
-
+		size = 0;
 	}
 
-
+	//adds an asteroid to the front of the list.
 	void add(Bullet* a) {
 		Node* newNode = new Node();
 		newNode->asteroid = a;
@@ -24,11 +34,12 @@ public:
 		if (temp != NULL) {
 			temp->prev = newNode;
 		}
+		size++;
 	}
 
+	//removes all destroyed asteroids. or asteroids with no health
 	void removeDestroyed() {
 		Node* temp = top;
-
 		while (temp != NULL) {
 			if (temp->asteroid->isDestroyed()) {
 				if (temp == top) {
@@ -36,11 +47,13 @@ public:
 				}
 				temp->prev = temp->next;
 				delete temp;
-
+				size--;
 			}
 		}
 	}
 
+	//moves all asteroids. if the asteroid goes out of bounds they with move 
+	//to the opposite side.
 	void move(float speed) {
 		Node* temp = top;
 		while (temp != NULL) {
@@ -64,11 +77,17 @@ public:
 		}
 	}
 
+	//draws all of the asteroids.
 	void draw() {
 		Node* temp = top;
 		while (temp != NULL) {
 			window.draw(*(temp->asteroid));
 			temp = temp->next;
 		}
+	}
+
+	//returns the amount of asteroids.
+	int getSize() {
+		return size;
 	}
 };

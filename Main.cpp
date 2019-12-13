@@ -1,8 +1,12 @@
+/*****************************************************
+FileName: Main.cpp
+Description: The .cpp file with the int main() function.
+Author: Kyle Reddeman
+Date Created 12/7/19
+Class: CptS 122
+******************************************************/
 #include <string>
 #include <iostream>
-#include <list>
-#include <array>
-//#include <Windows.h>
 #include <math.h>
 #include "Player.h"
 #include "Bullet.h"
@@ -19,16 +23,17 @@ int main() {
 	if (!font.loadFromFile("calibri.ttf")) {
 		cout << "Error loading font\n";
 	}
+	//set up fps counter
 	sf::Text fpsCount;
 	fpsCount.setFont(font);
 	fpsCount.setCharacterSize(14);
 	sf::Clock clock;
 
+	//drawable things
 	Player player(3);
-	//list<Bullet> bullets;
-	//array<Bullet, 5> bullets;
 	Bullet* bullets[5];
 	AsteroidManager* asteroidManager = new AsteroidManager(window);
+	sf::Clock spawnTimer;
 
 	for (int i = 0; i < 5; i++) {
 		bullets[i] = NULL;
@@ -36,8 +41,14 @@ int main() {
 	bool isPressed = false;
 
 	clock.restart();
+	spawnTimer.restart();
+	
 	while (window.isOpen()) {
-		
+		//spawn asteroids
+		if (spawnTimer.getElapsedTime().asSeconds() > 1 && asteroidManager->asteroidCount() < 15) {
+			asteroidManager->addAsteroid();
+			spawnTimer.restart();
+		}
 		sf::Time deltaT = clock.getElapsedTime();
 		clock.restart();//set fps counter.
 		fpsCount.setString("FPS:" + to_string((int)(1 / deltaT.asSeconds())));
@@ -48,9 +59,9 @@ int main() {
 				window.close();
 			}
 		}
-		//Sleep(16.6);
-		float angle = 0.f;
+		//float angle = 0.f;
 		float speed = 240.f;
+		//move foward
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 			player.move(speed * deltaT.asSeconds());
 		}
@@ -69,34 +80,21 @@ int main() {
 						break;
 					}
 				}
-				asteroidManager->addAsteroid();
 			}
 			isPressed = true;
 		}
 		else {
 			isPressed = false;
 		}
+
+
+
 		window.clear(sf::Color::Black);
 		window.draw(fpsCount);
 		window.draw(player);
 		asteroidManager->move(.75f * speed * deltaT.asSeconds());
 		asteroidManager->draw();
-		list<Bullet>::iterator bullet;
-		/*for (bullet = bullets.begin(); bullet != bullets.end(); ++bullet) {
-			float angle = (*bullet).getRotation();
-			(*bullet).move(sin(angle * PI / 180) * 1.f * speed * deltaT.asSeconds(), -cos(angle * PI / 180) * 1.f * speed * deltaT.asSeconds());
-			if ((*bullet).getPosition().x > 810 || (*bullet).getPosition().y > 810 || (*bullet).getPosition().x < -10 || (*bullet).getPosition().y < -10) {
- 				(*bullet).damage();
-			}
-			window.draw(*bullet);
-			if ((*bullet).isDead()) {
-				//bullet = bullets.erase(bullet);
-				//bullets.erase(bullet);
-//				bullet--;
-				//bullets.remove(*bullet);
-				cout << "dead";
-			}
-		}*/
+		//draw/move bullets. Asteroids used better solution
 		for (int i = 0; i < 5; i++) {
 			if (bullets[i] != NULL) {
 				float angle = bullets[i]->getRotation();
@@ -105,12 +103,11 @@ int main() {
 					bullets[i]->damage();
 				}
 				window.draw(*bullets[i]);
+				//if bullet is destroyed stop drawing it
 				if (bullets[i]->isDestroyed()) {
-					bullets[i]->~Bullet();
 					bullets[i] = NULL;
 				}
 			}
-			
 		}
 		window.display();
 	}

@@ -1,15 +1,20 @@
+/*****************************************************
+FileName: AsteroidManager.h
+Description: Used to manage the asteroids. Probably could have 
+gotten rid of this class and just used AsteroidList.
+Author: Kyle Reddeman
+Date Created 12/7/19
+Class: CptS 122
+******************************************************/
 #ifndef ASTEROIDMANAGER_H
 #define ASTEROIDMANAGER_H
 
 #include <SFML/Graphics.hpp>
-//#include "Bullet.h"
 #include "AsteroidList.h"
 #include <time.h>
 #include <stdlib.h>
 
 using namespace std;
-
-
 
 class AsteroidManager {
 private:
@@ -17,19 +22,25 @@ private:
 	sf::RenderWindow& window;
 
 public:
+	//sets the reference to window, and sets the random seed
 	AsteroidManager(sf::RenderWindow& w): window(w) {
 		asteroids = new AsteroidList(window);
 		srand(time(0));
 	}
 
+	//draws the asteroids.
 	void draw() {
 		asteroids->draw();
 	}
 
+	//moves all of the asteroids.
 	void move(float speed) {
 		asteroids->move(speed);
 	}
 
+	//creates and adds an asteroid to the asteroid list.
+	//gives random location size, and rotation to the asteroid.
+	//spawns on edges of screen to avoid spawn killing the player.
 	void addAsteroid() {
 		int size = rand() % 4 + 1;
 		int angle = rand() % 360;
@@ -53,6 +64,11 @@ public:
 		}
 		
 		asteroids->add(asteroid);
+	}
+
+	//returns the amount of asteroids in play.
+	int asteroidCount() {
+		return asteroids->getSize();
 	}
 };
 

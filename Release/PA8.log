@@ -1,0 +1,2 @@
+﻿  Main.cpp
+C:\Users\kyler\OneDrive\Documents\School\Cpts122\PAs\PA8\Player.h(10,10): fatal error C1083: Cannot open include file: 'SFML/Graphics.hpp': No such file or directory
